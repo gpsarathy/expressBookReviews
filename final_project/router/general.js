@@ -1,5 +1,5 @@
 const express = require('express');
-let books = require("./booksdb.js");
+let  booksService = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
 const public_users = express.Router();
@@ -28,36 +28,30 @@ public_users.post("/register", (req, res) => {
 });
 
 // Get the book list available in the shop
-public_users.get('/',function (req, res) {
+public_users.get('/', async function (req, res) {
   //Write your code here
+  let books = await booksService.getBooks()
   return res.status(200).json(books);
 });
 
 // Get book details based on ISBN
-public_users.get('/isbn/:isbn',function (req, res) {
+public_users.get('/isbn/:isbn',async function (req, res) {
   //Write your code here
-  return res.status(200).json(books[req.params.isbn]);
+  let books = await booksService.getByISBN(req.params.isbn)
+  return res.status(200).json(books);
  });
   
 // Get book details based on author
-public_users.get('/author/:author',function (req, res) {
+public_users.get('/author/:author', async function (req, res) {
   //Write your code here
-  let result = []
-  for(let book of Object.values(books)){
-    if(book.author === req.params.author)
-      result.push(book);
-  }
+  let result = await booksService.getByAuthor(req.params.author)
   return res.status(200).json(result);
 });
 
 // Get all books based on title
-public_users.get('/title/:title',function (req, res) {
+public_users.get('/title/:title',async function (req, res) {
   //Write your code here
-  let result = []
-  for(let book of Object.values(books)){
-    if(book.title === req.params.title)
-      result.push(book);
-  }
+  let result = await booksService.getByTitle(req.params.title)
   return res.status(200).json(result);
 });
 

@@ -11,4 +11,35 @@ let books = {
       10: {"author": "Samuel Beckett","title": "Molloy, Malone Dies, The Unnamable, the trilogy", "reviews": {} }
 }
 
-module.exports=books;
+async function getBooks() {
+    return books;
+}
+
+async function getByISBN(isbn) {
+      return books[isbn];
+}
+
+async function getByAuthor(author) {
+      
+      let result = []
+      for(let book of Object.values(books)){
+        if(book.author === author)
+          result.push(book);
+      }
+      return result;
+}
+
+async function getByTitle(title) {
+    let result = [];
+    for(let book of Object.values(books)){
+        if(book.title === title)
+          result.push(book);
+    }
+    return result;
+}
+
+module.exports.books=books;
+module.exports.getBooks=getBooks;
+module.exports.getByISBN=getByISBN;
+module.exports.getByAuthor=getByAuthor;
+module.exports.getByTitle=getByTitle;
